@@ -68,113 +68,123 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        body: Stack(
-          fit: StackFit.expand,
+        body: Column(
           children: [
-            CarouselSlider.builder(
-              itemCount: radios.length,
-              itemBuilder: (context, index, realIndex) {
-                final rad = radios[index];
-                return GestureDetector(
-                  onDoubleTap: () {
-                    print("Double tapped!");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    // margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                      border: Border.all(color: Colors.black, width: 5),
-                      image: DecorationImage(
-                        image: NetworkImage(rad.image),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.4),
-                          BlendMode.darken,
-                        ),
-                      ),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: -10,
-                          right: -10,
-                          child: ClipOval(
-                            clipBehavior: Clip.antiAlias,
-                            child: Container(
-                              // clipBehavior: Clip.antiAlias,
-                              // padding: const EdgeInsets.all(5),
-                              // margin: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                rad.category.toUpperCase(),
-                                style: TextStyle(
-                                  color: Pallete.whiteColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+            Stack(
+              // fit: StackFit.expand,
+              children: [
+                CarouselSlider.builder(
+                  itemCount: radios.length,
+                  itemBuilder: (context, index, realIndex) {
+                    final rad = radios[index];
+                    return GestureDetector(
+                      onDoubleTap: () {
+                        print("Double tapped!");
+                      },
+                      child: Container(
+                        // padding: const EdgeInsets.all(16),
+                        // margin: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          border: Border.all(color: Colors.black, width: 5),
+                          image: DecorationImage(
+                            image: NetworkImage(rad.image),
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.4),
+                              BlendMode.darken,
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                rad.name,
-                                style: TextStyle(
-                                  color: Pallete.whiteColor,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
+                              right: 6,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius:
+                                      BorderRadius.circular(16).copyWith(
+                                    topRight: const Radius.circular(50),
+                                    bottomRight: const Radius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  rad.category.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Pallete.whiteColor,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                rad.tagline,
-                                style: TextStyle(
-                                  color: Pallete.whiteColor,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    rad.name,
+                                    style: TextStyle(
+                                      color: Pallete.whiteColor,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    rad.tagline,
+                                    style: TextStyle(
+                                      color: Pallete.whiteColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.play_circle_outline,
+                                    color: Pallete.whiteColor,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    "Double tap to play",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.play_circle_outline,
-                                color: Pallete.whiteColor,
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                "Double tap to play",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade300,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                    );
+                  },
+                  options: CarouselOptions(
+                    autoPlay: false,
+                    enlargeCenterPage: true,
+                    aspectRatio: 1.1,
                   ),
-                );
-              },
-              options: CarouselOptions(
-                autoPlay: false,
-                enlargeCenterPage: true,
-                aspectRatio: 1.2,
-              ),
+                ),
+              ],
             ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height * 10),
+              child: Icon(
+                Icons.stop_circle,
+                color: Pallete.whiteColor,
+                size: 32,
+              ),
+            )
           ],
         ),
       ),
