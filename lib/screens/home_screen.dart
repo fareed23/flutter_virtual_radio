@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchRadios();
+    setupAlan();
 
     // Listener to play or pause
     audioPlayer.onPlayerStateChanged.listen((event) {
@@ -57,6 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
     selectedRadio = radios.firstWhere((element) => element.url == url);
     print(selectedRadio!.name);
     setState(() {});
+  }
+
+  setupAlan() {
+    AlanVoice.addButton(
+        "8e0b083e795c924d64635bba9c3571f42e956eca572e1d8b807a3e2338fdd0dc/stage",
+        buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
   }
 
   @override
