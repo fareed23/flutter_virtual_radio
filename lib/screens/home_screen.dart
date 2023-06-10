@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,19 +18,43 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // We initialize the list of radios
   List<MyRadio> radios = [];
+  late MyRadio selectedRadio;
+  late Color selectedColor;
+  bool isPlaying = false;
+
+  // Initialization of AudioPlayer library
+  final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
     fetchRadios();
+
+    // Listener to play or pause
+    audioPlayer.onPlayerStateChanged.listen((event) {
+      if (event == PlayerState.playing) {
+        isPlaying = true;
+      } else {
+        isPlaying = false;
+      }
+    });
   }
 
+  // Method to fetch radios from API
   fetchRadios() async {
     final radioJson = await rootBundle.loadString("assets/radio.json");
     // final jsonData = json.decode(radioJson);
     // Then we get it fromJson method from the list of MyRadio
     radios = MyRadioList.fromJson(radioJson).radios;
     print(radios);
+    setState(() {});
+  }
+
+  // Method to play music from URL
+  playMusic(String url) {
+    audioPlayer.play(UrlSource(url));
+    selectedRadio = radios.firstWhere((element) => element.url == url);
+    print(selectedRadio.name);
     setState(() {});
   }
 
@@ -79,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     final rad = radios[index];
                     return GestureDetector(
                       onDoubleTap: () {
+                        playMusic(rad.url);
                         print("Double tapped!");
                       },
                       child: Container(
@@ -176,15 +202,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Container(
-              margin:
-                  EdgeInsets.only(top: MediaQuery.of(context).size.height * 10),
-              child: Icon(
-                Icons.stop_circle,
-                color: Pallete.whiteColor,
-                size: 32,
-              ),
-            )
+            Column(
+              children: [
+                isPlaying == true
+                    ? Center(
+                        child: Text(
+                          "Playing now - ${selectedRadio.name}",
+                          style: TextStyle(
+                            color: Pallete.whiteColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      )
+                    : const Text(""),
+                Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * .2),
+                  child: InkWell(
+                    onTap: () {
+                      if (isPlaying) {
+                        audioPlayer.stop();
+                      } else {
+                        playMusic(selectedRadio.url);
+                      }
+                    },
+                    child: Icon(
+                      isPlaying
+                          ? Icons.stop_circle_outlined
+                          : Icons.play_circle_outline,
+                      color: Pallete.whiteColor,
+                      size: 40,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
