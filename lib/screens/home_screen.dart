@@ -44,9 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
   // Method to fetch radios from API
   fetchRadios() async {
     final radioJson = await rootBundle.loadString("assets/radio.json");
-    // final jsonData = json.decode(radioJson);
+
     // Then we get it fromJson method from the list of MyRadio
     radios = MyRadioList.fromJson(radioJson).radios;
+    selectedRadio = radios[0];
+    selectedColor = Color(int.parse(selectedRadio!.color));
     print(radios);
     setState(() {});
   }
@@ -61,8 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   setupAlan() {
     AlanVoice.addButton(
-        "8e0b083e795c924d64635bba9c3571f42e956eca572e1d8b807a3e2338fdd0dc/stage",
-        buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
+        "1d1891c7b42ae6e8dd60affc3aa8530a2e956eca572e1d8b807a3e2338fdd0dc/stage",
+        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT);
+    AlanVoice.callbacks.add((command) {
+      handleCommand(command.data);
+    });
+  }
+
+  handleCommand(Map<String, dynamic> response) {
+    switch (response["command"]) {
+      case "play":
+        playMusic(selectedRadio!.url);
+
+        break;
+      default:
+        print("Command was ${response['command']}");
+        break;
+    }
   }
 
   @override
