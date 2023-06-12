@@ -74,7 +74,38 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (response["command"]) {
       case "play":
         playMusic(selectedRadio!.url);
+        break;
+      case "stop":
+        audioPlayer.stop();
+        break;
+      case "next":
+        final index = selectedRadio!.id;
+        MyRadio newRadio;
+        if (index + 1 > radios.length) {
+          newRadio = radios.firstWhere((element) => element.id == 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        } else {
+          newRadio = radios.firstWhere((element) => element.id == index + 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        playMusic(newRadio.url);
+        break;
 
+      case "prev":
+        final index = selectedRadio!.id;
+        MyRadio newRadio;
+        if (index - 1 <= 0) {
+          newRadio = radios.firstWhere((element) => element.id == 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        } else {
+          newRadio = radios.firstWhere((element) => element.id == index - 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        playMusic(newRadio.url);
         break;
       default:
         print("Command was ${response['command']}");
