@@ -235,6 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             enlargeCenterPage: true,
                             aspectRatio: 1.1,
                             onPageChanged: (index, reason) {
+                              // selectedRadio = radios[index];
                               final colorHex = radios[index].color;
                               selectedColor = Color(int.parse(colorHex));
                               setState(() {});
