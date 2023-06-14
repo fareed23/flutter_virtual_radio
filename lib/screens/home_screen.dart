@@ -109,9 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
 
       case "play_channel":
-        MyRadio newRadio = radios.firstWhere((element) => element.id == 1);
+        final id = response['id'];
+        audioPlayer.pause();
+        MyRadio newRadio = radios.firstWhere((element) => element.id == id);
         radios.remove(newRadio);
         radios.insert(0, newRadio);
+        playMusic(newRadio.url);
+        break;
       default:
         print("Command was ${response['command']}");
         break;
