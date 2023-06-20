@@ -20,6 +20,18 @@ class _HomeScreenState extends State<HomeScreen> {
   MyRadio? selectedRadio;
   Color? selectedColor;
   bool isPlaying = false;
+  // Suggestions for the user hard-coded; you can use API for it
+  final sugg = [
+    "Play",
+    "Stop",
+    "Play rock music",
+    "Play 1-7 FM",
+    "Play next",
+    "Play 104 FM",
+    "Pause",
+    "Play previous music",
+    "Play pop music",
+  ];
 
   // Initialization of AudioPlayer library
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -75,6 +87,15 @@ class _HomeScreenState extends State<HomeScreen> {
       case "play":
         playMusic(selectedRadio!.url);
         break;
+
+      case "play_channel":
+        final id = response['id'];
+        audioPlayer.pause();
+        MyRadio newRadio = radios.firstWhere((element) => element.id == id);
+        radios.remove(newRadio);
+        radios.insert(0, newRadio);
+        playMusic(newRadio.url);
+        break;
       case "stop":
         audioPlayer.stop();
         break;
@@ -108,14 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
         playMusic(newRadio.url);
         break;
 
-      case "play_channel":
-        final id = response['id'];
-        audioPlayer.pause();
-        MyRadio newRadio = radios.firstWhere((element) => element.id == id);
-        radios.remove(newRadio);
-        radios.insert(0, newRadio);
-        playMusic(newRadio.url);
-        break;
       default:
         print("Command was ${response['command']}");
         break;
@@ -140,7 +153,48 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: const Drawer(),
+        drawer: Drawer(
+          elevation: 0,
+          backgroundColor: selectedColor ?? Pallete.secondaryColor,
+          child: radios != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 50, left: 20, bottom: 20),
+                      child: Text(
+                        "All Channels",
+                        style:
+                            TextStyle(color: Pallete.whiteColor, fontSize: 18),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        children: radios
+                            .map(
+                              (e) => ListTile(
+                                leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(e.icon)),
+                                title: Text(
+                                  '${e.name} FM',
+                                  style: TextStyle(color: Pallete.whiteColor),
+                                ),
+                                subtitle: Text(
+                                  e.tagline,
+                                  style: TextStyle(color: Pallete.whiteColor),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                )
+              : const Offstage(),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
