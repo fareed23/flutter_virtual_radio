@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -29,8 +31,21 @@ class _HomeScreenState extends State<HomeScreen> {
     "Play next",
     "Play 104 FM",
     "Pause",
-    "Play previous music",
+    "Play previous",
     "Play pop music",
+  ];
+
+  final randomColors = [
+    const Color.fromARGB(255, 147, 45, 37),
+    const Color.fromARGB(255, 36, 87, 128),
+    const Color.fromARGB(255, 84, 130, 85),
+    const Color.fromARGB(255, 79, 77, 58),
+    const Color.fromARGB(255, 44, 79, 76),
+    const Color.fromARGB(255, 216, 204, 165),
+    const Color.fromARGB(255, 191, 90, 90),
+    const Color.fromARGB(255, 125, 94, 203),
+    const Color.fromARGB(255, 215, 107, 199),
+    const Color.fromARGB(255, 206, 155, 75),
   ];
 
   // Initialization of AudioPlayer library
@@ -156,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: Drawer(
           elevation: 0,
           backgroundColor: selectedColor ?? Pallete.secondaryColor,
+          // ignore: unnecessary_null_comparison
           child: radios != null
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,6 +231,39 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Text -> Start with - Hey Alan
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                "Start with - Hey Alan",
+                style: TextStyle(
+                  color: Pallete.whiteColor,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            CarouselSlider.builder(
+              itemCount: sugg.length,
+              itemBuilder: (context, index, realIndex) {
+                final su = sugg[index];
+                return Chip(
+                  label: Text(su),
+                  backgroundColor: randomColors[index],
+                );
+              },
+              options: CarouselOptions(
+                autoPlay: true,
+                height: 50,
+                viewportFraction: 0.38,
+                autoPlayAnimationDuration: const Duration(seconds: 3),
+                autoPlayCurve: Curves.linear,
+                enableInfiniteScroll: true,
+                pauseAutoPlayInFiniteScroll: true,
+              ),
+            ),
+            const SizedBox(height: 15),
             Stack(
               // fit: StackFit.expand,
               children: [
@@ -343,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 50),
+              padding: const EdgeInsets.only(top: 20),
               child: Column(
                 children: [
                   isPlaying
@@ -357,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : const Text(""),
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
                       if (isPlaying) {
