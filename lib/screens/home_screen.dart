@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -25,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Suggestions for the user hard-coded; you can use API for it
   final sugg = [
     "Play",
+    "Play pop music",
     "Stop",
     "Play rock music",
     "Play 1-7 FM",
@@ -32,13 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     "Play 104 FM",
     "Pause",
     "Play previous",
-    "Play pop music",
   ];
 
   final randomColors = [
     const Color.fromARGB(255, 147, 45, 37),
     const Color.fromARGB(255, 36, 87, 128),
-    const Color.fromARGB(255, 84, 130, 85),
+    const Color.fromARGB(255, 126, 185, 127),
     const Color.fromARGB(255, 79, 77, 58),
     const Color.fromARGB(255, 44, 79, 76),
     const Color.fromARGB(255, 216, 204, 165),
@@ -229,13 +227,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Text -> Start with - Hey Alan
             Container(
-              margin: const EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(top: 30, bottom: 30),
+              padding: EdgeInsets.zero,
               child: Text(
-                "Start with - Hey Alan",
+                "Start with - Hey Alan 👇",
                 style: TextStyle(
                   color: Pallete.whiteColor,
                   fontWeight: FontWeight.w700,
@@ -244,187 +242,198 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            CarouselSlider.builder(
-              itemCount: sugg.length,
-              itemBuilder: (context, index, realIndex) {
-                final su = sugg[index];
-                return Chip(
-                  label: Text(su),
-                  backgroundColor: randomColors[index],
-                );
-              },
-              options: CarouselOptions(
-                autoPlay: true,
-                height: 50,
-                viewportFraction: 0.38,
-                autoPlayAnimationDuration: const Duration(seconds: 3),
-                autoPlayCurve: Curves.linear,
-                enableInfiniteScroll: true,
-                pauseAutoPlayInFiniteScroll: true,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Stack(
-              // fit: StackFit.expand,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                radios.isNotEmpty
-                    ? CarouselSlider.builder(
-                        itemCount: radios.length,
-                        itemBuilder: (context, index, realIndex) {
-                          final rad = radios[index];
-                          return GestureDetector(
-                            onTap: () {
-                              audioPlayer.stop();
-                              print("Single Tapped!");
+                CarouselSlider.builder(
+                  itemCount: sugg.length,
+                  itemBuilder: (context, index, realIndex) {
+                    final su = sugg[index];
+                    return Chip(
+                      label: Text(su),
+                      backgroundColor: randomColors[index],
+                    );
+                  },
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    height: 50,
+                    viewportFraction: 0.35,
+                    autoPlayAnimationDuration: const Duration(seconds: 3),
+                    autoPlayCurve: Curves.linear,
+                    enableInfiniteScroll: true,
+                    pauseAutoPlayInFiniteScroll: true,
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Stack(
+                  // fit: StackFit.expand,
+                  children: [
+                    radios.isNotEmpty
+                        ? CarouselSlider.builder(
+                            itemCount: radios.length,
+                            itemBuilder: (context, index, realIndex) {
+                              final rad = radios[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  audioPlayer.stop();
+                                  print("Single Tapped!");
+                                },
+                                onDoubleTap: () {
+                                  playMusic(rad.url);
+                                  print("Double tapped!");
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  // padding: const EdgeInsets.all(16),
+                                  // margin: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(60),
+                                    border: Border.all(
+                                        color: Colors.black, width: 5),
+                                    image: DecorationImage(
+                                      image: NetworkImage(rad.image),
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(0.4),
+                                        BlendMode.darken,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        top: 0,
+                                        right: 6,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius:
+                                                BorderRadius.circular(16)
+                                                    .copyWith(
+                                              topRight:
+                                                  const Radius.circular(50),
+                                              bottomRight:
+                                                  const Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            rad.category.toUpperCase(),
+                                            style: TextStyle(
+                                              color: Pallete.whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              rad.name,
+                                              style: TextStyle(
+                                                color: Pallete.whiteColor,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              rad.tagline,
+                                              style: TextStyle(
+                                                color: Pallete.whiteColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.play_circle_outline,
+                                              color: Pallete.whiteColor,
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              "Double tap to play",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey.shade300,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
                             },
-                            onDoubleTap: () {
-                              playMusic(rad.url);
-                              print("Double tapped!");
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(seconds: 1),
-                              // padding: const EdgeInsets.all(16),
-                              // margin: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(60),
-                                border:
-                                    Border.all(color: Colors.black, width: 5),
-                                image: DecorationImage(
-                                  image: NetworkImage(rad.image),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.4),
-                                    BlendMode.darken,
+                            options: CarouselOptions(
+                                autoPlay: false,
+                                enlargeCenterPage: true,
+                                aspectRatio: 1.1,
+                                onPageChanged: (index, reason) {
+                                  // selectedRadio = radios[index];
+                                  final colorHex = radios[index].color;
+                                  selectedColor = Color(int.parse(colorHex));
+                                  setState(() {});
+                                }),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(
+                              color: Pallete.whiteColor,
+                            ),
+                          ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 45),
+                  child: Column(
+                    children: [
+                      isPlaying
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15, bottom: 15),
+                              child: Center(
+                                child: Text(
+                                  "Playing now - ${selectedRadio!.name} FM",
+                                  style: TextStyle(
+                                    color: Pallete.whiteColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: 0,
-                                    right: 6,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius:
-                                            BorderRadius.circular(16).copyWith(
-                                          topRight: const Radius.circular(50),
-                                          bottomRight:
-                                              const Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        rad.category.toUpperCase(),
-                                        style: TextStyle(
-                                          color: Pallete.whiteColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          rad.name,
-                                          style: TextStyle(
-                                            color: Pallete.whiteColor,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          rad.tagline,
-                                          style: TextStyle(
-                                            color: Pallete.whiteColor,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.play_circle_outline,
-                                          color: Pallete.whiteColor,
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          "Double tap to play",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade300,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                            )
+                          : const Text(""),
+                      GestureDetector(
+                        onTap: () {
+                          if (isPlaying) {
+                            audioPlayer.stop();
+                          } else {
+                            playMusic(selectedRadio!.url);
+                          }
                         },
-                        options: CarouselOptions(
-                            autoPlay: false,
-                            enlargeCenterPage: true,
-                            aspectRatio: 1.1,
-                            onPageChanged: (index, reason) {
-                              // selectedRadio = radios[index];
-                              final colorHex = radios[index].color;
-                              selectedColor = Color(int.parse(colorHex));
-                              setState(() {});
-                            }),
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(
+                        child: Icon(
+                          isPlaying
+                              ? Icons.stop_circle_outlined
+                              : Icons.play_circle_outlined,
                           color: Pallete.whiteColor,
+                          size: 50,
                         ),
                       ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Column(
-                children: [
-                  isPlaying
-                      ? Center(
-                          child: Text(
-                            "Playing now - ${selectedRadio!.name} FM",
-                            style: TextStyle(
-                              color: Pallete.whiteColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      : const Text(""),
-                  // const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      if (isPlaying) {
-                        audioPlayer.stop();
-                      } else {
-                        playMusic(selectedRadio!.url);
-                      }
-                    },
-                    child: Icon(
-                      isPlaying
-                          ? Icons.stop_circle_outlined
-                          : Icons.play_circle_outlined,
-                      color: Pallete.whiteColor,
-                      size: 40,
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
