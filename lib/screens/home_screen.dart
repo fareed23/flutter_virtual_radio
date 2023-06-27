@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:virtual_assistant/models/radio.dart';
-import 'package:virtual_assistant/utils/ai_colors.dart';
+import 'package:virtual_assistant/utils/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -156,6 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Pallete.primaryColor // if its null it will go Pallete.primaryColor,
     ];
 
+    final buttonGradient = const [Color(0XFF8C36BE), Color(0XFFEF990b)];
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -230,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Text -> Start with - Hey Alan
             Container(
-              margin: const EdgeInsets.only(top: 30, bottom: 30),
+              margin: const EdgeInsets.only(top: 7, bottom: 7),
               padding: EdgeInsets.zero,
               child: Text(
                 "Start with - Hey Alan 👇",
@@ -284,8 +286,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 child: AnimatedContainer(
                                   duration: const Duration(seconds: 1),
-                                  // padding: const EdgeInsets.all(16),
-                                  // margin: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(60),
                                     border: Border.all(
@@ -396,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 45),
+                  padding: const EdgeInsets.only(top: 5),
                   child: Column(
                     children: [
                       isPlaying
@@ -404,11 +404,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding:
                                   const EdgeInsets.only(top: 15, bottom: 15),
                               child: Center(
-                                child: Text(
-                                  "Playing now - ${selectedRadio!.name} FM",
-                                  style: TextStyle(
-                                    color: Pallete.whiteColor,
-                                    fontWeight: FontWeight.w600,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration:
+                                      BoxDecoration(color: Pallete.whiteColor),
+                                  child: Text(
+                                    "Playing now - ${selectedRadio!.name} FM",
+                                    style: TextStyle(
+                                      color: Pallete.whiteColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -422,12 +427,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             playMusic(selectedRadio!.url);
                           }
                         },
-                        child: Icon(
-                          isPlaying
-                              ? Icons.stop_circle_outlined
-                              : Icons.play_circle_outlined,
-                          color: Pallete.whiteColor,
-                          size: 50,
+                        child: Container(
+                          width: 102,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: buttonGradient,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            isPlaying
+                                ? Icons.stop_circle_outlined
+                                : Icons.play_circle_outlined,
+                            color: Pallete.whiteColor,
+                            size: 50,
+                          ),
                         ),
                       ),
                     ],

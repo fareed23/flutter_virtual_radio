@@ -5,4 +5,5 @@ mixin Pallete {
   static Color secondaryColor = Colors.purple.shade300;
   static Color blackColor = Colors.black;
   static Color whiteColor = Colors.white;
+  static Color greyColor = Colors.grey;
 }
