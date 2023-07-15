@@ -1,6 +1,7 @@
 import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
@@ -155,8 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedColor ??
           Pallete.primaryColor // if its null it will go Pallete.primaryColor,
     ];
-
-    final buttonGradient = const [Color(0XFF8C36BE), Color(0XFFEF990b)];
 
     return Container(
       decoration: BoxDecoration(
@@ -378,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             options: CarouselOptions(
-                                autoPlay: false,
+                                autoPlay: true,
                                 enlargeCenterPage: true,
                                 aspectRatio: 1.1,
                                 onPageChanged: (index, reason) {
@@ -428,19 +427,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                         child: Container(
-                          width: 102,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: buttonGradient,
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 40),
                           child: Icon(
                             isPlaying
-                                ? Icons.stop_circle_outlined
-                                : Icons.play_circle_outlined,
+                                ? CupertinoIcons.stop_fill
+                                : CupertinoIcons.play_fill,
                             color: Pallete.whiteColor,
                             size: 50,
                           ),
